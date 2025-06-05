@@ -24,7 +24,7 @@ JavaScriptで作成した、シンプルかつカスタマイズ可能なルー�
 
 ---
 
-## 📦 ファイル構成
+## 📦 ディレクトリ構成
 roulette-app/
 ├── index.html # ルーレットのUIと構造
 ├── style.css # 見た目のスタイル（オプションで外部化）
@@ -32,6 +32,17 @@ roulette-app/
 ├── screenshot.png # アプリのスクリーンショット（任意）
 └── README.md # このファイル
 
+## 4.ディレクトリ構成
+
+```
+.
+└── roulette-app/
+    ├── index.html
+    ├── style.css
+    ├── script.js
+    ├── roulette.png
+    └── README.md
+```
 
 ---
 
