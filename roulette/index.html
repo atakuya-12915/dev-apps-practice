@@ -3,78 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>ルーレットアプリ</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-
-    canvas {
-      margin-top: 0;
-      border: 2px solid #ccc;
-      border-radius: 50%;
-      position: relative;
-      z-index: 0;
-    }
-
-    #pointer {
-      width: 0;
-      height: 0;
-      border-left: 15px solid transparent;
-      border-right: 15px solid transparent;
-      border-bottom: 25px solid black;
-      margin: 0 auto;
-      position: absolute;
-      top: 178px; /* キャンバス中心ちょい上 */
-      left: 0;
-      right: 0;
-      z-index: 1;
-    }
-
-    .entry-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 4px 0;
-    }
-
-    .entry-row input[type="text"] {
-      width: 150px;
-      margin-right: 6px;
-    }
-
-    .entry-row select {
-      margin-left: 6px;
-    }
-
-    .remove {
-      margin-left: 8px;
-      background-color: #f44336;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      cursor: pointer;
-    }
-
-    #add, #spinBtn {
-      margin: 10px;
-      padding: 8px 16px;
-    }
-
-    #canvas-wrapper {
-      position: relative;
-      width: 400px;
-      margin: 0 auto;
-    }
-  </style>
 </head>
+
 <body>
 
   <h1>🎯 ルーレット作成 🎯</h1>
 
   <div>
-    <input type="text" id="label" placeholder="例：当たり">
+    <input type="text" id="label" placeholder="例：卵焼き">
     <select id="color">
       <option value="red">赤</option>
       <option value="orange">オレンジ</option>
@@ -98,100 +34,7 @@
 
   <h2 id="result"></h2>
 
-  <script>
-    const data = [];
-    const list = document.getElementById("list");
-    const ctx = document.getElementById("wheel").getContext("2d");
-    const result = document.getElementById("result");
 
-    document.getElementById("add").onclick = () => {
-      const label = document.getElementById("label").value.trim();
-      const color = document.getElementById("color").value;
-      if (!label) return alert("項目を入力してください。");
-
-      data.push({ label, color });
-      renderList();
-    };
-
-    function renderList() {
-      list.innerHTML = "";
-      data.forEach((item, i) => {
-        const row = document.createElement("div");
-        row.className = "entry-row";
-        row.innerHTML = `
-          <input type="text" value="${item.label}" disabled>
-          <div style="width:20px; height:20px; background:${item.color}; border:1px solid #333;"></div>
-          <button class="remove">X</button>
-        `;
-        row.querySelector(".remove").onclick = () => {
-          data.splice(i, 1);
-          renderList();
-        };
-        list.appendChild(row);
-      });
-    }
-
-    document.getElementById("spinBtn").onclick = () => {
-      if (data.length === 0) {
-        alert("項目を追加してください。");
-        return;
-      }
-      drawWheel();
-      spin();
-    };
-
-    function drawWheel(rotation = 0) {
-      const total = data.length;
-      const angle = (Math.PI * 2) / total;
-
-      ctx.clearRect(0, 0, 400, 400);
-      for (let i = 0; i < total; i++) {
-        const start = rotation + angle * i;
-        const end = start + angle;
-        ctx.beginPath();
-        ctx.moveTo(200, 200);
-        ctx.arc(200, 200, 200, start, end);
-        ctx.fillStyle = data[i].color;
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.save();
-        ctx.translate(200, 200);
-        ctx.rotate(start + angle / 2);
-        ctx.fillStyle = "#000";
-        ctx.font = "16px sans-serif";
-        ctx.textAlign = "right";
-        ctx.fillText(data[i].label, 180, 5);
-        ctx.restore();
-      }
-    }
-
-    function spin() {
-      let rotation = 0;
-      let speed = Math.random() * 0.3 + 0.25;
-      const friction = 0.985;
-
-      function animate() {
-        speed *= friction;
-        rotation += speed;
-
-        drawWheel(rotation);
-
-        if (speed > 0.005) {
-          requestAnimationFrame(animate);
-        } else {
-          // 🎯 正確な当たり判定（針が上を向いている）
-          const degrees = (rotation * 180 / Math.PI) % 360;
-          const normalized = (360 - degrees + 270) % 360; // ← ここが重要！
-          const slice = 360 / data.length;
-          const index = Math.floor(normalized / slice) % data.length;
-          result.textContent = `🎉 当たり: ${data[index].label} 🎉`;
-        }
-      }
-
-      animate();
-    }
-  </script>
 
 </body>
 </html>
